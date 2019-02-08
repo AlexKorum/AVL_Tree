@@ -6,12 +6,12 @@ public class Main {
         for (int i : mas) {
             avl.add(i);
         }
-
         try {
-            System.out.println(avl.remove(55));
+            System.out.println(avl.remove(14));
             System.out.println(avl.getFerst().getE());
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
+        avl.visual(avl.getFerst());
     }
 }

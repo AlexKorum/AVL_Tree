@@ -40,7 +40,7 @@ public class AVL {
         return true;
     }
 
-    public boolean remove(int e) {
+    public boolean remove(float e) {
         Node node = retNode(e);
         if (node.getLeft() == null && node.getRight() == null) {
             if (node.getParent() == null) {
@@ -92,6 +92,10 @@ public class AVL {
                 }
             }
         }
+        if(!(node.getLeft()==null)&&!(node.getRight()==null)){
+            Node nodeNext = next(node.getE());//TODO Дописать удаление элемента с двумя потомками
+        }
+
         return false;
     }
 
@@ -99,7 +103,7 @@ public class AVL {
         return min(ferst);
     }
 
-    public Node retNode(int e) {
+    public Node retNode(float e) {
         Node node = this.ferst;
         while (true) {
             if (node.getE() == e) {
@@ -128,7 +132,7 @@ public class AVL {
         return node;
     }
 
-    public Node next(int e) {//Следующий элемент
+    public Node next(float e) {//Следующий элемент
         Node node = retNode(e);//Создание ссылки на текущий элемент
         if (node.getRight() == null) {//Проверка на существование правого потомка
             while (true) {//Цикл подъема
@@ -149,5 +153,15 @@ public class AVL {
 
     public Node getFerst() {
         return ferst;
+    }
+
+    public void visual(Node node){
+        if (node.getLeft()!=null){
+            visual(node.getLeft());
+        }
+        System.out.println(node.getE());
+        if (node.getRight()!=null){
+            visual(node.getRight());
+        }
     }
 }

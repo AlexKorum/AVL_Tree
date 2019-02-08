@@ -2,7 +2,7 @@ public class Node {
     private Node parent;
     private Node left;
     private Node right;
-    private int e;
+    private float e;
 
     public Node getParent() {
         return parent;
@@ -28,11 +28,11 @@ public class Node {
         this.right = right;
     }
 
-    public int getE() {
+    public float getE() {
         return e;
     }
 
-    public void setE(Integer e) {
+    public void setE(float e) {
         this.e = e;
     }
 }
