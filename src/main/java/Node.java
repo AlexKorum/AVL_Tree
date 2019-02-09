@@ -2,7 +2,8 @@ public class Node {
     private Node parent;
     private Node left;
     private Node right;
-    private float e;
+    private int ID;
+    private int sizeChild=0;
 
     public Node getParent() {
         return parent;
@@ -28,11 +29,19 @@ public class Node {
         this.right = right;
     }
 
-    public float getE() {
-        return e;
+    public int getID() {
+        return ID;
     }
 
-    public void setE(float e) {
-        this.e = e;
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int getSizeChild() {
+        return sizeChild;
+    }
+
+    public void setSizeChild(int sizeChild) {
+        this.sizeChild = sizeChild;
     }
 }

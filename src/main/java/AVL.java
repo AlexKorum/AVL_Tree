@@ -6,19 +6,19 @@ public class AVL {
         this.ferst = new Node();
     }
 
-    public boolean add(float e) {
+    public boolean add(int e) {
         if (size == 0) {//Проверка на первый элемент(Есть ли корень у дерева)
-            ferst.setE(e);//Добавляем элемент в корень если он не заполнен
+            this.ferst.setID(e);//Добавляем элемент в корень если он не заполнен
             size++;//Увеличиваем размер дерева(количество элементов в нем
         } else {
             Node newNode = new Node();//Создаем элемент добавления(тот который будет вставлен в дерево)
-            newNode.setE(e);//Задаем ключ у нового элемента
+            newNode.setID(e);//Задаем ключ у нового элемента
             newNode.setParent(this.ferst);//Создаем указатель на родителя
             while (true) {//"Бесконечный" цикл прохождения по дереву
-                if (newNode.getE() == newNode.getParent().getE()) {//Если элемент уже существует, то возвращаем False
+                if (newNode.getID() == newNode.getParent().getID()) {//Если элемент уже существует, то возвращаем False
                     return false;
                 }
-                if (newNode.getE() < newNode.getParent().getE()) {//Сравнение элемента в вставляемом объекте и его родителя
+                if (newNode.getID() < newNode.getParent().getID()) {//Сравнение элемента в вставляемом объекте и его родителя
                     if (newNode.getParent().getLeft() == null) {//Если элемент меньше родительского, то проверяем существование левого потомка
                         newNode.getParent().setLeft(newNode);//Если его нет, то родителю нашего элемента назначаем его левым потомком
                         size++;//Увеличиваем размер дерева
@@ -36,15 +36,17 @@ public class AVL {
                     }
                 }
             }
+            //TODO Проход по дереву вверх для добавления разности ветвей дерева
+
         }
         return true;
     }
 
-    public boolean remove(float e) {
+    public boolean remove(int e) {
         Node node = retNode(e);
         if (node.getLeft() == null && node.getRight() == null) {
             if (node.getParent() == null) {
-                ferst = null;
+                this.ferst = null;
                 return true;
             } else {
                 if (node.getParent().getLeft().equals(node)) {
@@ -58,8 +60,8 @@ public class AVL {
         }
         if (!(node.getLeft() == null) && node.getRight() == null) {
             if (node.getParent() == null) {
-                ferst = node.getLeft();
-                ferst.setParent(null);
+                this.ferst = node.getLeft();
+                this.ferst.setParent(null);
                 return true;
             } else {
                 Node ret = node.getParent();
@@ -76,8 +78,8 @@ public class AVL {
         }
         if (node.getLeft() == null && !(node.getRight() == null)) {
             if (node.getParent() == null) {
-                ferst = node.getRight();
-                ferst.setParent(null);
+                this.ferst = node.getRight();
+                this.ferst.setParent(null);
                 return true;
             } else {
                 Node ret = node.getParent();
@@ -94,23 +96,20 @@ public class AVL {
         }
         if (!(node.getLeft() == null) && !(node.getRight() == null)) {
             Node nodeNext = next(node);
-            if(nodeNext.getRight()==null){
-                if(nodeNext.getParent().getLeft().equals(nodeNext)){
+            if (nodeNext.getRight() == null) {
+                if (nodeNext.getParent().getLeft().equals(nodeNext)) {
                     nodeNext.getParent().setLeft(null);
-                }
-                else {
+                } else {
                     nodeNext.getParent().setRight(null);
                 }
                 insertNode(node, nodeNext);
                 return true;
-            }
-            else {
-                if (nodeNext.getParent().getLeft().equals(nodeNext)){
+            } else {
+                if (nodeNext.getParent().getLeft().equals(nodeNext)) {
                     nodeNext.getParent().setLeft(nodeNext.getRight());
                     nodeNext.getRight().setParent(nodeNext.getParent());
                     nodeNext.setRight(null);
-                }
-                else  {
+                } else {
                     nodeNext.getParent().setRight(nodeNext.getRight());
                     nodeNext.getRight().setParent(nodeNext.getParent());
                     nodeNext.setRight(null);
@@ -140,29 +139,28 @@ public class AVL {
             if (node.getParent().getRight().equals(node)) {
                 node.getParent().setRight(nodeNext);
             }
-        }
-        else {
-            ferst=nodeNext;
+        } else {
+            this.ferst = nodeNext;
         }
     }
 
     public Node minElement() {
-        return min(ferst);
+        return min(this.ferst);
     }
 
-    public Node retNode(float e) {
+    public Node retNode(int e) {
         Node node = this.ferst;
         while (true) {
-            if (node.getE() == e) {
+            if (node.getID() == e) {
                 return node;
             }
-            if (e < node.getE()) {
+            if (e < node.getID()) {
                 if (node.getLeft() == null) {
                     return null;
                 }
                 node = node.getLeft();
             }
-            if (e > node.getE()) {
+            if (e > node.getID()) {
                 if (node.getRight() == null) {
                     return null;
                 }
@@ -198,14 +196,14 @@ public class AVL {
     }
 
     public Node getFerst() {
-        return ferst;
+        return this.ferst;
     }
 
     public void visual(Node node) {
         if (node.getLeft() != null) {
             visual(node.getLeft());
         }
-        System.out.println(node.getE());
+        System.out.println(node.getID() + " " + node.getSizeChild());
         if (node.getRight() != null) {
             visual(node.getRight());
         }
@@ -213,15 +211,15 @@ public class AVL {
 
     private void testNode(Node node) {
         if (node != null) {
-            System.out.println("Node: " + node.getE());
+            System.out.println("Node: " + node.getID());
             if (node.getParent() != null) {
-                System.out.println("Parent: " + node.getParent().getE());
+                System.out.println("Parent: " + node.getParent().getID());
             }
             if (node.getLeft() != null) {
-                System.out.println("Left: " + node.getLeft().getE());
+                System.out.println("Left: " + node.getLeft().getID());
             }
             if (node.getRight() != null) {
-                System.out.println("Right: " + node.getRight().getE());
+                System.out.println("Right: " + node.getRight().getID());
             }
             System.out.println();
         } else {
