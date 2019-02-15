@@ -36,8 +36,17 @@ public class AVL {
                     }
                 }
             }
-            //TODO Проход по дереву вверх для добавления разности ветвей дерева
-
+            while (true) {
+                if (newNode.getParent() == null) {
+                    break;
+                }
+                if (newNode.getParent().getLeft() == newNode) {
+                    newNode.getParent().setSizeChild(newNode.getParent().getSizeChild() - 1);
+                } else {
+                    newNode.getParent().setSizeChild(newNode.getParent().getSizeChild() + 1);
+                }
+                newNode = newNode.getParent();
+            }
         }
         return true;
     }
@@ -83,7 +92,7 @@ public class AVL {
                 return true;
             } else {
                 Node ret = node.getParent();
-                if (node.getParent().getLeft().equals(node)) {
+                if (node.getParent().getLeft() == node) {
                     ret.setLeft(node.getRight());
                     node.getRight().setParent(ret);
                     return true;
@@ -105,7 +114,7 @@ public class AVL {
                 insertNode(node, nodeNext);
                 return true;
             } else {
-                if (nodeNext.getParent().getLeft().equals(nodeNext)) {
+                if (nodeNext.getParent().getLeft() == nodeNext) {
                     nodeNext.getParent().setLeft(nodeNext.getRight());
                     nodeNext.getRight().setParent(nodeNext.getParent());
                     nodeNext.setRight(null);
@@ -115,6 +124,7 @@ public class AVL {
                     nodeNext.setRight(null);
                 }
                 insertNode(node, nodeNext);
+
                 return true;
             }
         }
