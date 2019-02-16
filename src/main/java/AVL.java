@@ -2,12 +2,13 @@ public class AVL {
     private Node ferst;
     private int size = 0;
 
-    public AVL() {
+    /*public AVL() {
         this.ferst = new Node();
-    }
+    }*/
 
     public boolean add(int e) {
-        if (size == 0) {//Проверка на первый элемент(Есть ли корень у дерева)
+        if (ferst == null) {//Проверка на первый элемент(Есть ли корень у дерева)
+            this.ferst = new Node();
             this.ferst.setID(e);//Добавляем элемент в корень если он не заполнен
             size++;//Увеличиваем размер дерева(количество элементов в нем
         } else {
@@ -36,45 +37,49 @@ public class AVL {
                     }
                 }
             }
-            while (true) {
-                if (newNode.getParent() == null) {
-                    break;
+
+            while (true) {//Бесконечный цикл для прохода по дереву вверх
+                if (newNode.getParent() == null) {//Сверяем, есть ли у нашего элемента родитель
+                    break;//Если да, выходим из цикла
                 }
-                if (newNode.getParent().getLeft() == newNode) {
-                    newNode.getParent().setSizeChild(newNode.getParent().getSizeChild() - 1);
+                if (newNode.getParent().getLeft() == newNode) {//Наш элемент левый?
+                    newNode.getParent().setSizeChild(newNode.getParent().getSizeChild() - 1);//Отнимаем от разности потомков родителя 1
                 } else {
-                    newNode.getParent().setSizeChild(newNode.getParent().getSizeChild() + 1);
+                    newNode.getParent().setSizeChild(newNode.getParent().getSizeChild() + 1);//Прибавляем разности потомков родителя 1
                 }
-                newNode = newNode.getParent();
+                newNode = newNode.getParent();//Передвигаемся на следующий элемент вверх(На родителя)
             }
         }
         return true;
     }
 
-    public boolean remove(int e) {
-        Node node = retNode(e);
-        if (node.getLeft() == null && node.getRight() == null) {
-            if (node.getParent() == null) {
-                this.ferst = null;
-                return true;
-            } else {
-                if (node.getParent().getLeft().equals(node)) {
-                    node.getParent().setLeft(null);
-                    return true;
-                } else {
-                    node.getParent().setRight(null);
-                    return true;
+    public boolean remove(int e) {//Удаление элемента
+        Node node = retNode(e);//Находим требуемый для удаления элемент
+        Node pass = node;
+        if (node.getLeft() == null && node.getRight() == null) {//У нашего элемента есть 2 потомка?
+            if (node.getParent() == null) {//Да. У нашего элемента есть родитель?
+                this.ferst = null;//Нет. Значит это первый и единственный элеменит в дереве
+                return true;//Возвращаем удачное удаление
+            } else {//Да, у нашего элемента еть родитель
+                UpNodeSizeChild(node);
+                if (node.getParent().getLeft().equals(node)) {//Наш элемент левый?
+                    node.getParent().setLeft(null);//Да. Удаляем связь родителя с левым потомком
+                    return true;//Возвращаем удачное удаление
+                } else {//Нет, он правый
+                    node.getParent().setRight(null);//Удаляем связь родителя с правым потомком
+                    return true;//Возвращаем удачное удаление
                 }
             }
         }
-        if (!(node.getLeft() == null) && node.getRight() == null) {
-            if (node.getParent() == null) {
-                this.ferst = node.getLeft();
-                this.ferst.setParent(null);
-                return true;
-            } else {
-                Node ret = node.getParent();
-                if (node.getParent().getLeft().equals(node)) {
+        if (!(node.getLeft() == null) && node.getRight() == null) {//Наш элемент имеет только левый потомок?
+            if (node.getParent() == null) {//Да. У нашего элемента есть родитель?
+                this.ferst = node.getLeft();//Нет. Делаем корневым элементом левый потомок преведущего
+                this.ferst.setParent(null);//Обнуляем значение родителя
+                return true;//Возвращаем удачное удаление
+            } else {//Да, есть родитель
+                Node ret = node.getParent();//Создаем ссылку на родителя нашего элемента
+                UpNodeSizeChild(node);
+                if (node.getParent().getLeft().equals(node)) {//
                     ret.setLeft(node.getLeft());
                     node.getLeft().setParent(ret);
                     return true;
@@ -92,6 +97,7 @@ public class AVL {
                 return true;
             } else {
                 Node ret = node.getParent();
+                UpNodeSizeChild(node);
                 if (node.getParent().getLeft() == node) {
                     ret.setLeft(node.getRight());
                     node.getRight().setParent(ret);
@@ -132,22 +138,38 @@ public class AVL {
         return false;
     }
 
-    private void insertNode(Node node, Node nodeNext) {//Вставка элемента вместо существующего
-        nodeNext.setParent(node.getParent());
-        nodeNext.setLeft(node.getLeft());
-        nodeNext.setRight(node.getRight());
-        if (node.getLeft() != null) {
-            node.getLeft().setParent(nodeNext);
-        }
-        if (node.getRight() != null) {
-            node.getRight().setParent(nodeNext);
-        }
-        if (node.getParent() != null) {
-            if (node.getParent().getLeft().equals(node)) {
-                node.getParent().setLeft(nodeNext);
+    private void UpNodeSizeChild(Node pass) {
+        while (true) {
+            if (pass.getParent() == null) {
+                break;
             }
-            if (node.getParent().getRight().equals(node)) {
-                node.getParent().setRight(nodeNext);
+            if (pass.getParent().getLeft() == pass) {
+                pass.getParent().setSizeChild(pass.getParent().getSizeChild() + 1);
+            } else {
+                pass.getParent().setSizeChild(pass.getParent().getSizeChild() - 1);
+            }
+            pass = pass.getParent();
+        }
+    }
+
+    private void insertNode(Node delNode, Node nodeNext) {//Вставка элемента вместо существующего
+        UpNodeSizeChild(nodeNext);
+        nodeNext.setSizeChild(delNode.getSizeChild());
+        nodeNext.setParent(delNode.getParent());
+        nodeNext.setLeft(delNode.getLeft());
+        nodeNext.setRight(delNode.getRight());
+        if (delNode.getLeft() != null) {
+            delNode.getLeft().setParent(nodeNext);
+        }
+        if (delNode.getRight() != null) {
+            delNode.getRight().setParent(nodeNext);
+        }
+        if (delNode.getParent() != null) {
+            if (delNode.getParent().getLeft().equals(delNode)) {
+                delNode.getParent().setLeft(nodeNext);
+            }
+            if (delNode.getParent().getRight().equals(delNode)) {
+                delNode.getParent().setRight(nodeNext);
             }
         } else {
             this.ferst = nodeNext;
@@ -219,7 +241,7 @@ public class AVL {
         }
     }
 
-    private void testNode(Node node) {
+    public void testNode(Node node) {
         if (node != null) {
             System.out.println("Node: " + node.getID());
             if (node.getParent() != null) {
