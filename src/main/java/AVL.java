@@ -32,59 +32,19 @@ public class AVL {
 
             Node nd = newNode;
             while (true) {//Бесконечный цикл для прохода по дереву вверх
-                int sizeND = nd.getParent().getSizeTree();
                 if (nd.getParent() == null) {
                     break;
                 } else {
-                    ballans(nd.getParent());
-                    if (sizeND == nd.getParent().getSizeTree()) {
-                        break;
-                    } else {
-                        nd = nd.getParent();
-                    }
+                    setSizeTree(nd.getParent());
+                    nd = nd.getParent();
                 }
             }
         }
         return true;
     }
 
-    private void ballans(Node newNode) {
-        Node left = newNode.getLeft();
-        Node right = newNode.getRight();
-        int leftSize, rightSize;
-        if (left == null) {
-            leftSize = 0;
-        } else {
-            leftSize = left.getSizeTree();
-        }
-        if (right == null) {
-            rightSize = 0;
-        } else {
-            rightSize = right.getSizeTree();
-        }
-        if (Math.abs(rightSize - leftSize) <= 1) {
-            return;
-        } else {
-            int difference = leftSize - rightSize;
-            if (difference >= 2) {
-                if (right.getLeft().getSizeTree() <= right.getRight().getSizeTree()) {
-                    leftSmall(newNode);
-                    return;
-                } else {
-                    leftBig(newNode);
-                    return;
-                }
-            }
-            if (difference <= -2) {
-                if (left.getLeft().getSizeTree() >= left.getRight().getSizeTree()) {
-                    rightSmall(newNode);
-                    return;
-                } else {
-                    rightBig(newNode);
-                    return;
-                }
-            }
-        }
+    private void ballans(Node node) {
+
     }
 
     private int setSizeTree(Node node) {
@@ -324,7 +284,7 @@ public class AVL {
         if (node.getLeft() != null) {
             visual(node.getLeft());
         }
-        System.out.println(node.getID() + " " + node.getSizeTree());
+        testNode(node);
         if (node.getRight() != null) {
             visual(node.getRight());
         }
@@ -342,6 +302,7 @@ public class AVL {
             if (node.getRight() != null) {
                 System.out.println("Right: " + node.getRight().getID());
             }
+            System.out.println("Size: " + node.getSizeTree());
             System.out.println();
         } else {
             System.out.println("Don't node");
