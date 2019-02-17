@@ -5,11 +5,12 @@ public class Main {
         //int[] mas ={10,15,18,0,20,21,22};
         //int[] mas = {10, 5, 1, 6, 15, 14, 17};
         //int[] mas = {10, 5, 1, 6, 20, 15, 13, 17, 50};
-        int[] mas = {1, 2, 3, 4, 5, 6, 7, 8};
+        int[] mas = {4, 2, 6, 1, 3, 5, 8, 7};
         for (int i : mas) {
             avl.add(i);
         }
 
+        //avl.leftSmall(avl.getNode(5));
         avl.visual(avl.getFerst());
 
 

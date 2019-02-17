@@ -31,7 +31,7 @@ public class AVL {
             }
 
             Node nd = newNode;
-            while (true) {//Бесконечный цикл для прохода по дереву вверх
+            while (true) {
                 if (nd.getParent() == null) {
                     break;
                 } else {
@@ -39,19 +39,56 @@ public class AVL {
                     nd = nd.getParent();
                 }
             }
+            ballans(nd).getParent();
         }
         return true;
     }
 
-    private void ballans(Node node) {
-
+    private Node ballans(Node node) {
+        if (node.getLeft() == null && node.getRight() == null) {
+            return node;
+        } else if (node.getLeft() != null && node.getRight() == null) {
+            return rightSmall(node);
+        } else if (node.getLeft() == null && node.getRight() != null) {
+            return leftSmall(node);
+        } else {
+            if ((node.getRight().getSizeTree() - node.getLeft().getSizeTree()) >= 2) {
+                if (node.getRight().getRight() != null && node.getRight().getLeft() == null) {
+                    return leftBig(node);
+                }
+                if (node.getRight().getRight() == null && node.getRight().getLeft() != null) {
+                    return leftSmall(node);
+                }
+                if (node.getRight().getRight().getSizeTree() >= node.getRight().getLeft().getSizeTree()) {
+                    return leftSmall(node);
+                }
+                if (node.getRight().getRight().getSizeTree() < node.getRight().getLeft().getSizeTree()) {
+                    return leftSmall(node);
+                }
+            }
+            if ((node.getRight().getSizeTree() - node.getLeft().getSizeTree()) <= -2) {
+                if (node.getLeft().getRight() != null && node.getLeft().getLeft() == null) {
+                    return rightBig(node);
+                }
+                if (node.getLeft().getRight() == null && node.getLeft().getLeft() != null) {
+                    return rightSmall(node);
+                }
+                if (node.getLeft().getLeft().getSizeTree() < node.getLeft().getRight().getSizeTree()) {
+                    return rightBig(node);
+                }
+                if (node.getLeft().getLeft().getSizeTree() >= node.getLeft().getRight().getSizeTree()) {
+                    return rightSmall(node);
+                }
+            }
+        }
+        return node;
     }
 
     private int setSizeTree(Node node) {
         int left, right;
         if (node.getLeft() == null && node.getRight() == null) {
-            left = 0;
-            right = 0;
+            node.setSizeTree(0);
+            return 0;
         } else if (node.getLeft() != null && node.getRight() == null) {
             left = node.getLeft().getSizeTree();
             right = 0;
@@ -93,19 +130,19 @@ public class AVL {
 
         SmallHelp(a, b);
 
+        setSizeTree(a);
+        setSizeTree(b);
         return b;
     }
 
     public Node leftBig(Node node) {
-        Node nd = rightSmall(node.getRight());
-        leftSmall(node);
-        return nd;
+        rightSmall(node.getRight());
+        return leftSmall(node);
     }
 
     public Node rightBig(Node node) {
-        Node nd = leftSmall(node.getLeft());
-        rightSmall(node);
-        return nd;
+        leftSmall(node.getLeft());
+        return rightSmall(node);
     }
 
     private void SmallHelp(Node a, Node b) {
@@ -284,6 +321,7 @@ public class AVL {
         if (node.getLeft() != null) {
             visual(node.getLeft());
         }
+        //System.out.println(node.getID()+" "+node.getSizeTree());
         testNode(node);
         if (node.getRight() != null) {
             visual(node.getRight());
