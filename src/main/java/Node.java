@@ -3,7 +3,7 @@ public class Node {
     private Node left;
     private Node right;
     private int ID;
-    private int sizeChild=0;
+    private int sizeTree =0;
 
     public Node getParent() {
         return parent;
@@ -37,11 +37,11 @@ public class Node {
         this.ID = ID;
     }
 
-    public int getSizeChild() {
-        return sizeChild;
+    public int getSizeTree() {
+        return sizeTree;
     }
 
-    public void setSizeChild(int sizeChild) {
-        this.sizeChild = sizeChild;
+    public void setSizeTree(int sizeTree) {
+        this.sizeTree = sizeTree;
     }
 }
