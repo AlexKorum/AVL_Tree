@@ -2,12 +2,12 @@ public class AVL {
     private Node ferst;
 
     public boolean add(int e) {
+        Node newNode = new Node();//Создаем элемент добавления(тот который будет вставлен в дерево)
+        newNode.setID(e);//Задаем ключ у нового элемента
         if (ferst == null) {//Проверка на первый элемент(Есть ли корень у дерева)
-            this.ferst = new Node();
+            this.ferst = newNode;
             this.ferst.setID(e);//Добавляем элемент в корень если он не заполнен
         } else {
-            Node newNode = new Node();//Создаем элемент добавления(тот который будет вставлен в дерево)
-            newNode.setID(e);//Задаем ключ у нового элемента
             newNode.setParent(this.ferst);//Создаем указатель на родителя
             while (true) {//"Бесконечный" цикл прохождения по дереву
                 if (newNode.getID() == newNode.getParent().getID()) {//Если элемент уже существует, то возвращаем False
@@ -29,66 +29,24 @@ public class AVL {
                     }
                 }
             }
-
-            Node nd = newNode;
-            while (true) {
-                if (nd.getParent() == null) {
-                    break;
-                } else {
-                    setSizeTree(nd.getParent());
-                    nd = nd.getParent();
-                }
-            }
-            ballans(nd).getParent();
         }
+
+        Node nd = newNode;
+        while (nd.getParent() != null) {
+            sizeTree(nd);
+            nd = nd.getParent();
+        }
+        sizeTree(nd);
+
         return true;
     }
 
-    private Node ballans(Node node) {
-        if (node.getLeft() == null && node.getRight() == null) {
-            return node;
-        } else if (node.getLeft() != null && node.getRight() == null) {
-            return rightSmall(node);
-        } else if (node.getLeft() == null && node.getRight() != null) {
-            return leftSmall(node);
-        } else {
-            if ((node.getRight().getSizeTree() - node.getLeft().getSizeTree()) >= 2) {
-                if (node.getRight().getRight() != null && node.getRight().getLeft() == null) {
-                    return leftBig(node);
-                }
-                if (node.getRight().getRight() == null && node.getRight().getLeft() != null) {
-                    return leftSmall(node);
-                }
-                if (node.getRight().getRight().getSizeTree() >= node.getRight().getLeft().getSizeTree()) {
-                    return leftSmall(node);
-                }
-                if (node.getRight().getRight().getSizeTree() < node.getRight().getLeft().getSizeTree()) {
-                    return leftSmall(node);
-                }
-            }
-            if ((node.getRight().getSizeTree() - node.getLeft().getSizeTree()) <= -2) {
-                if (node.getLeft().getRight() != null && node.getLeft().getLeft() == null) {
-                    return rightBig(node);
-                }
-                if (node.getLeft().getRight() == null && node.getLeft().getLeft() != null) {
-                    return rightSmall(node);
-                }
-                if (node.getLeft().getLeft().getSizeTree() < node.getLeft().getRight().getSizeTree()) {
-                    return rightBig(node);
-                }
-                if (node.getLeft().getLeft().getSizeTree() >= node.getLeft().getRight().getSizeTree()) {
-                    return rightSmall(node);
-                }
-            }
-        }
-        return node;
-    }
 
-    private int setSizeTree(Node node) {
+    public void sizeTree(Node node) {
         int left, right;
         if (node.getLeft() == null && node.getRight() == null) {
-            node.setSizeTree(0);
-            return 0;
+            left = 0;
+            right = 0;
         } else if (node.getLeft() != null && node.getRight() == null) {
             left = node.getLeft().getSizeTree();
             right = 0;
@@ -100,62 +58,62 @@ public class AVL {
             right = node.getRight().getSizeTree();
         }
         node.setSizeTree(Math.max(left, right) + 1);
-        return node.getSizeTree();
     }
 
     public Node leftSmall(Node node) {
         Node a = node;
         Node b = node.getRight();
-
-        b.setParent(a.getParent());
+        smallHelpAB(a, b);
         a.setParent(b);
         a.setRight(b.getLeft());
         b.setLeft(a);
-
-        SmallHelp(a, b);
-
-        setSizeTree(a);
-        setSizeTree(b);
+        if (a.getRight() != null) {
+            a.getRight().setParent(a);
+        }
+        sizeTree(a);
+        sizeTree(b);
         return b;
     }
 
     public Node rightSmall(Node node) {
         Node a = node;
         Node b = node.getLeft();
-
-        b.setParent(a.getParent());
+        smallHelpAB(a, b);
         a.setParent(b);
         a.setLeft(b.getRight());
         b.setRight(a);
-
-        SmallHelp(a, b);
-
-        setSizeTree(a);
-        setSizeTree(b);
+        if (a.getLeft()!=null){
+            a.getLeft().setParent(a);
+        }
+        sizeTree(a);
+        sizeTree(b);
         return b;
     }
 
-    public Node leftBig(Node node) {
+    public Node leftBig(Node node){
         rightSmall(node.getRight());
         return leftSmall(node);
     }
 
-    public Node rightBig(Node node) {
+    public Node rightBig(Node node){
         leftSmall(node.getLeft());
         return rightSmall(node);
     }
 
-    private void SmallHelp(Node a, Node b) {
-        if (b.getParent() == null) {
+    private void smallHelpAB(Node a, Node b) {
+        if (a == this.ferst) {
             this.ferst = b;
+            b.setParent(null);
         } else {
-            if (b.getParent().getLeft() == a) {
-                b.getParent().setLeft(b);
+            b.setParent(a.getParent());
+            if (a.getParent().getLeft() == a) {
+                a.getParent().setLeft(b);
             } else {
-                b.getParent().setRight(b);
+                a.getParent().setRight(b);
             }
         }
     }
+
 
     public boolean remove(int e) {//Удаление элемента
         Node node = getNode(e);//Находим требуемый для удаления элемент
@@ -321,7 +279,7 @@ public class AVL {
         if (node.getLeft() != null) {
             visual(node.getLeft());
         }
-        //System.out.println(node.getID()+" "+node.getSizeTree());
+        //System.out.println(node.getID() + " " + node.getSizeTree());
         testNode(node);
         if (node.getRight() != null) {
             visual(node.getRight());
