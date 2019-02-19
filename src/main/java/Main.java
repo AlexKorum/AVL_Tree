@@ -11,6 +11,7 @@ public class Main {
         for (int i : mas) {
             avl.add(i);
         }
+        avl.remove(55);
         avl.visual(avl.getFerst());
 
     }
