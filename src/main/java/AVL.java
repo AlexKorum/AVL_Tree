@@ -130,6 +130,66 @@ public class AVL {
         return false;
     }
 
+    public Node getNode(int e) {
+        Node node = this.ferst;
+        while (true) {
+            if (node.getID() == e) {
+                return node;
+            }
+            if (e < node.getID()) {
+                if (node.getLeft() == null) {
+                    return null;
+                }
+                node = node.getLeft();
+            }
+            if (e > node.getID()) {
+                if (node.getRight() == null) {
+                    return null;
+                }
+                node = node.getRight();
+            }
+        }
+    }
+
+    public Node minElement() {
+        return min(this.ferst);
+    }
+
+    public Node getFerst() {
+        return this.ferst;
+    }
+
+    public void visual(Node node) {
+        if (node.getLeft() != null) {
+            visual(node.getLeft());
+        }
+        //System.out.println(node.getID() + " " + node.getSizeTree());
+        testNode(node);
+        if (node.getRight() != null) {
+            visual(node.getRight());
+        }
+    }
+
+    public void testNode(Node node) {
+        if (node != null) {
+            System.out.println("Node: " + node.getID());
+            if (node.getParent() != null) {
+                System.out.println("Parent: " + node.getParent().getID());
+            }
+            if (node.getLeft() != null) {
+                System.out.println("Left: " + node.getLeft().getID());
+            }
+            if (node.getRight() != null) {
+                System.out.println("Right: " + node.getRight().getID());
+            }
+            System.out.println("Size: " + node.getSizeTree());
+            System.out.println();
+        } else {
+            System.out.println("Don't node");
+            System.out.println();
+        }
+    }
+
     private void ballans(Node node) {
         if (node == null) return;
         Node traveler = node;
@@ -289,31 +349,6 @@ public class AVL {
         ballans(bal);
     }
 
-    public Node minElement() {
-        return min(this.ferst);
-    }
-
-    public Node getNode(int e) {
-        Node node = this.ferst;
-        while (true) {
-            if (node.getID() == e) {
-                return node;
-            }
-            if (e < node.getID()) {
-                if (node.getLeft() == null) {
-                    return null;
-                }
-                node = node.getLeft();
-            }
-            if (e > node.getID()) {
-                if (node.getRight() == null) {
-                    return null;
-                }
-                node = node.getRight();
-            }
-        }
-    }
-
     private Node min(Node Rode) {
         Node node = Rode;
         while (node.getLeft() != null) {
@@ -337,41 +372,6 @@ public class AVL {
             }
         } else {//Если существует правый потомок
             return min(node.getRight());//Возвращаем минимум из правого поддерева
-        }
-    }
-
-    public Node getFerst() {
-        return this.ferst;
-    }
-
-    public void visual(Node node) {
-        if (node.getLeft() != null) {
-            visual(node.getLeft());
-        }
-        //System.out.println(node.getID() + " " + node.getSizeTree());
-        testNode(node);
-        if (node.getRight() != null) {
-            visual(node.getRight());
-        }
-    }
-
-    public void testNode(Node node) {
-        if (node != null) {
-            System.out.println("Node: " + node.getID());
-            if (node.getParent() != null) {
-                System.out.println("Parent: " + node.getParent().getID());
-            }
-            if (node.getLeft() != null) {
-                System.out.println("Left: " + node.getLeft().getID());
-            }
-            if (node.getRight() != null) {
-                System.out.println("Right: " + node.getRight().getID());
-            }
-            System.out.println("Size: " + node.getSizeTree());
-            System.out.println();
-        } else {
-            System.out.println("Don't node");
-            System.out.println();
         }
     }
 }
