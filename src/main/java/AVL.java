@@ -30,17 +30,72 @@ public class AVL {
                 }
             }
         }
-
-        Node nd = newNode;
-        while (nd.getParent() != null) {
-            sizeTree(nd);
-            nd = nd.getParent();
-        }
-        sizeTree(nd);
+        ballans(newNode.getParent());
 
         return true;
     }
 
+    private void ballans(Node node) {
+        if (node == null) return;
+        Node traveler = node;
+        Node helper;
+        while (true) {
+            helper = traveler;
+            int sizePast = traveler.getSizeTree();//Запоминаем значение размера до пересчета
+            sizeTree(traveler);//Пересчитываем
+            if (sizePast == traveler.getSizeTree()) {//Сравниваем размеры до и после
+                if (traveler.getParent() != null) {//если это лист переходим на одну вершину наверх
+                    traveler = traveler.getParent();
+                    continue;
+                } else {
+                    return;//Если это первый элемент выходим
+                }
+            } else {
+                if (differenceSize(traveler) >= 2) {
+                    if (traveler.getRight().getLeft() != null && traveler.getRight().getRight() == null) {
+                        helper = leftBig(traveler);
+                    } else if (traveler.getRight().getLeft() == null && traveler.getRight().getRight() != null) {
+                        helper = leftSmall(traveler);
+                    } else if (differenceSize(traveler.getRight()) >= 0) {
+                        helper = leftSmall(traveler);
+                    } else if (differenceSize(traveler.getRight()) < 0) {
+                        helper = leftBig(traveler);
+                    }
+                } else if (differenceSize(traveler) <= -2) {
+                    if (traveler.getLeft().getRight() != null && traveler.getLeft().getLeft() == null) {
+                        helper = rightBig(traveler);
+                    } else if (traveler.getLeft().getRight() == null && traveler.getLeft().getLeft() != null) {
+                        helper = rightSmall(traveler);
+                    } else if (differenceSize(traveler.getLeft()) <= 0) {
+                        helper = rightSmall(traveler);
+                    } else if (differenceSize(traveler.getLeft()) > 0) {
+                        helper = rightBig(traveler);
+                    }
+                }
+                if (helper.getParent() != null) {
+                    traveler = helper.getParent();
+                } else return;
+            }
+        }
+    }
+
+    private int differenceSize(Node node) {
+        int left, right;
+        if (node.getLeft() == null && node.getRight() == null) {
+            left = 0;
+            right = 0;
+        } else if (node.getLeft() != null && node.getRight() == null) {
+            left = node.getLeft().getSizeTree();
+            right = 0;
+        } else if (node.getLeft() == null && node.getRight() != null) {
+            left = 0;
+            right = node.getRight().getSizeTree();
+        } else {
+            left = node.getLeft().getSizeTree();
+            right = node.getRight().getSizeTree();
+        }
+        return (right - left);
+    }
 
     public void sizeTree(Node node) {
         int left, right;
@@ -82,7 +137,7 @@ public class AVL {
         a.setParent(b);
         a.setLeft(b.getRight());
         b.setRight(a);
-        if (a.getLeft()!=null){
+        if (a.getLeft() != null) {
             a.getLeft().setParent(a);
         }
         sizeTree(a);
@@ -90,12 +145,12 @@ public class AVL {
         return b;
     }
 
-    public Node leftBig(Node node){
+    public Node leftBig(Node node) {
         rightSmall(node.getRight());
         return leftSmall(node);
     }
 
-    public Node rightBig(Node node){
+    public Node rightBig(Node node) {
         leftSmall(node.getLeft());
         return rightSmall(node);
     }

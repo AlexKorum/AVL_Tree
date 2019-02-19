@@ -3,7 +3,7 @@ public class Node {
     private Node left;
     private Node right;
     private int ID;
-    private int sizeTree = 0;
+    private int sizeTree = 1;
 
     public Node getParent() {
         return parent;
